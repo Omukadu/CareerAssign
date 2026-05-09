@@ -57,3 +57,73 @@ body {
 .chip {
     @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
 }
+.dots {
+    width: 72px;
+    height: 40.3px;
+    background: radial-gradient(farthest-side, #5b21b6 90%, #0000) 50% 0,
+        radial-gradient(farthest-side, #5b21b6 90%, #0000) 100% 0;
+    background-size: 17.3px 17.3px;
+    background-repeat: no-repeat;
+    animation: dots-pr30iylg 1.5s linear infinite;
+}
+
+.dots:before {
+    content: "";
+    position: absolute;
+    width: 17.3px;
+    height: 17.3px;
+    border-radius: 50%;
+    background: #5b21b6;
+    left: 0;
+    top: 0;
+    animation: dots-q6bpf4lg 1.5s linear infinite,
+        dots-b39z9ilg 0.5s cubic-bezier(0, 200, .8, 200) infinite;
+}
+
+@keyframes dots-pr30iylg {
+
+    0%,
+    31% {
+        background-position: 50% 0, 100% 0;
+    }
+
+    33% {
+        background-position: 50% 100%, 100% 0;
+    }
+
+    43%,
+    64% {
+        background-position: 50% 0, 100% 0;
+    }
+
+    66% {
+        background-position: 50% 0, 100% 100%;
+    }
+
+    79% {
+        background-position: 50% 0, 100% 0;
+    }
+
+    100% {
+        transform: translateX(calc(-100%/3));
+    }
+}
+
+@keyframes dots-q6bpf4lg {
+    100% {
+        left: calc(100% + 10.1px);
+    }
+}
+
+@keyframes dots-b39z9ilg {
+    100% {
+        top: -0.22px;
+    }
+}
+.loader-container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

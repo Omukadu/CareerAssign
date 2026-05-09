@@ -1,20 +1,25 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
-import Layout from './components/Layout.jsx';
-import Home from './pages/Home.jsx';
-import Careers from './pages/Careers.jsx';
-import CareerDetail from './pages/CareerDetail.jsx';
-import CareerForm from './pages/CareerForm.jsx';
-import Skills from './pages/Skills.jsx';
-import Saved from './pages/Saved.jsx';
-import Progress from './pages/Progress.jsx';
-import Categories from './pages/Categories.jsx';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import Layout from "./components/Layout.jsx";
+import Home from "./pages/Home.jsx";
+import Careers from "./pages/Careers.jsx";
+import CareerDetail from "./pages/CareerDetail.jsx";
+import CareerForm from "./pages/CareerForm.jsx";
+import Skills from "./pages/Skills.jsx";
+import Saved from "./pages/Saved.jsx";
+import Progress from "./pages/Progress.jsx";
+import Categories from "./pages/Categories.jsx";
 
 function Private({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="p-10 text-gray-500">Loading…</div>;
+  if (loading)
+    return (
+      <div className="loader-container">
+        <div className="dots"></div>
+      </div>
+    );
   return user ? children : <Navigate to="/login" replace />;
 }
 
@@ -23,7 +28,13 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route element={<Private><Layout /></Private>}>
+      <Route
+        element={
+          <Private>
+            <Layout />
+          </Private>
+        }
+      >
         <Route path="/" element={<Home />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/new" element={<CareerForm />} />
