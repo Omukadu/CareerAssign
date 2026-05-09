@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import {
   Compass,
@@ -29,10 +29,10 @@ const nav = [
 export default function Layout() {
   const { user, logout } = useAuth();
   const nav2 = useNavigate();
-
+  const location = useLocation();
   return (
     <div className="min-h-screen flex">
-      <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-gray-100 bg-white p-6">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-64 flex-col border-r border-gray-100 bg-white p-6">
         <div className="flex items-center gap-3 mb-10">
           <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white">
             <Compass size={20} />
@@ -60,8 +60,7 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
-
-        {window.location.pathname != "/careers" && (
+        {location.pathname !== "/careers" && (
           <div className="mt-auto rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 p-5 text-white">
             <div className="text-3xl mb-2">🚀</div>
             <div className="font-semibold mb-1">Not sure where to start?</div>
@@ -78,26 +77,30 @@ export default function Layout() {
         )}
       </aside>
 
-      <main className="flex-1 min-w-0">
+      <main className="flex-1 min-w-0 lg:ml-64">
         <header className="sticky top-0 z-10 bg-[#fafaf7]/80 backdrop-blur border-b border-gray-100">
-          <div className="flex items-center justify-between gap-4 px-6 lg:px-10 py-4">
-            <div className="relative flex-1 max-w-2xl">
-              <input
-                className="input pl-10"
-                placeholder="Search careers"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter")
-                    nav2(`/careers?q=${encodeURIComponent(e.target.value)}`);
-                }}
-              />
-            </div>
+          <div
+            className={`flex items-center  gap-4 px-6 lg:px-10 py-4 ${location.pathname !== "/careers" ? "justify-between" : "justify-end"}`}
+          >
+            {location.pathname !== "/careers" && (
+              <div className="relative flex-1 max-w-2xl ">
+                <input
+                  className="input pl-10"
+                  placeholder="Search careers"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter")
+                      nav2(`/careers?q=${encodeURIComponent(e.target.value)}`);
+                  }}
+                />
+              </div>
+            )}
             <div className="flex items-center gap-3">
-              <button
+              {/* <button
                 className="relative p-2 text-gray-500 hover:text-gray-800"
                 title="Notifications"
               >
                 <Bell size={20} />
-              </button>
+              </button> */}
               <button
                 onClick={() => nav2("/saved")}
                 className="p-2 text-gray-500 hover:text-gray-800"
@@ -113,7 +116,7 @@ export default function Layout() {
                   <div className="text-sm font-semibold leading-tight">
                     {user?.name}
                   </div>
-                  <div className="text-xs text-gray-500">{user?.role}</div>
+                  {/* <div className="text-xs text-gray-500">{user?.role}</div> */}
                 </div>
                 <button
                   onClick={logout}
