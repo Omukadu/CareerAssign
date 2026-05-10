@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../api/client";
 import ProgressBar from "../components/ProgressBar.jsx";
 import { Plus, Trash2, Edit2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function Skills() {
   const [skills, setSkills] = useState([]);
@@ -48,7 +49,17 @@ export default function Skills() {
     setShow(true);
   };
   const del = async (id) => {
-    if (confirm("Delete skill?")) {
+    const result = await Swal.fire({
+      title: "Delete Skill?",
+      text: "This action cannot be undone",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+    });
+    if (result.isConfirmed) {
       await api.delete(`/skills/${id}`);
       load();
     }

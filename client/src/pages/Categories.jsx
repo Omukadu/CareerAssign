@@ -3,6 +3,7 @@ import api from "../api/client";
 import { Plus, Trash2, Edit2 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function Categories() {
   const [cats, setCats] = useState([]);
@@ -28,7 +29,17 @@ export default function Categories() {
     setEditId(c._id);
   };
   const del = async (id) => {
-    if (confirm("Delete?")) {
+    const result = await Swal.fire({
+      title: "Delete Category?",
+      text: "This action cannot be undone",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+    });
+    if (result.isConfirmed) {
       await api.delete(`/categories/${id}`);
       load();
     }
