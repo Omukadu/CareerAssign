@@ -179,20 +179,16 @@ export default function Layout() {
                 <Menu size={20} />
               </button>
 
-              {location.pathname !== "/careers" && (
-                <div className="relative flex-1 max-w-2xl min-w-0">
-                  <input
-                    className="input pl-10"
-                    placeholder="Search careers"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter")
-                        nav2(
-                          `/careers?q=${encodeURIComponent(e.target.value)}`,
-                        );
-                    }}
-                  />
-                </div>
-              )}
+              <div className="relative flex-1 max-w-2xl min-w-0">
+                <input
+                  className="input pl-10"
+                  placeholder="Search careers, skills, categories..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter")
+                      nav2(`/search?q=${encodeURIComponent(e.target.value)}`);
+                  }}
+                />
+              </div>
             </div>
             <div className="flex items-center gap-3">
               {/* <button

@@ -11,6 +11,7 @@ import Skills from "./pages/Skills.jsx";
 import Saved from "./pages/Saved.jsx";
 import Progress from "./pages/Progress.jsx";
 import Categories from "./pages/Categories.jsx";
+import Search from "./pages/Search.jsx";
 import Loader from "./components/Loader.jsx";
 
 function Private({ children }) {
@@ -32,6 +33,7 @@ export default function App() {
         }
       >
         <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/new" element={<CareerForm />} />
         <Route path="/careers/:id/edit" element={<CareerForm />} />
