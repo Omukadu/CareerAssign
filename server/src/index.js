@@ -6,13 +6,17 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const { errorHandler, notFound } = require('./middleware/error');
+const decryptJson = require('./middleware/decryptJson');
+const encryptJson = require('./middleware/encryptJson');
 
 const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: process.env.CORS_ORIGIN?.split(',') || '*', credentials: true }));
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '5mb' }));
 app.use(morgan('dev'));
+app.use(decryptJson);
+app.use(encryptJson);
 
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50 });
 
