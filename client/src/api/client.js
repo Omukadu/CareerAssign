@@ -16,7 +16,10 @@ function b64ToBytes(b64) {
 
 async function deriveAesKey(secret) {
   const enc = new TextEncoder();
-  const hash = await crypto.subtle.digest("SHA-256", enc.encode(String(secret)));
+  const hash = await crypto.subtle.digest(
+    "SHA-256",
+    enc.encode(String(secret)),
+  );
   return crypto.subtle.importKey("raw", hash, { name: "AES-GCM" }, false, [
     "decrypt",
   ]);
@@ -27,14 +30,14 @@ async function decryptEnvelope(env) {
   let ivB64, tagB64, dataB64;
   let alg;
 
-  // New packed format: data = alg.iv.tag.ciphertext
+  // New packed format: data = iv.tag.ciphertext.alg
   if (typeof env.data === "string" && env.data.includes(".")) {
     const parts = env.data.split(".");
     if (parts.length >= 4) {
-      alg = parts[0];
-      ivB64 = parts[1];
-      tagB64 = parts[2];
-      dataB64 = parts.slice(3).join("."); // defensive, in case delimiter appears unexpectedly
+      alg = parts[parts.length - 1];
+      ivB64 = parts[0];
+      tagB64 = parts[1];
+      dataB64 = parts.slice(2, -1).join("."); // defensive, in case delimiter appears unexpectedly
     } else if (parts.length >= 3) {
       // Older packed format: iv.tag.ciphertext
       ivB64 = parts[0];
@@ -71,7 +74,10 @@ async function decryptEnvelope(env) {
 
 async function encryptPayload(payload) {
   const enc = new TextEncoder();
-  const key = await crypto.subtle.digest("SHA-256", enc.encode(String(ENC_KEY)));
+  const key = await crypto.subtle.digest(
+    "SHA-256",
+    enc.encode(String(ENC_KEY)),
+  );
   const cryptoKey = await crypto.subtle.importKey(
     "raw",
     key,
@@ -81,7 +87,11 @@ async function encryptPayload(payload) {
   );
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const plain = enc.encode(JSON.stringify(payload));
-  const cipherBuf = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, cryptoKey, plain);
+  const cipherBuf = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    cryptoKey,
+    plain,
+  );
   const cipherBytes = new Uint8Array(cipherBuf);
   const tag = cipherBytes.slice(cipherBytes.length - 16);
   const data = cipherBytes.slice(0, cipherBytes.length - 16);
@@ -96,7 +106,7 @@ async function encryptPayload(payload) {
   const tagB64 = toB64(tag);
   const dataB64 = toB64(data);
 
-  return { __enc: 1, data: `A256GCM.${ivB64}.${tagB64}.${dataB64}` };
+  return { __enc: 1, data: `${ivB64}.${tagB64}.${dataB64}.A256GCM` };
 }
 
 api.interceptors.request.use((cfg) => {

@@ -20,8 +20,8 @@ function encryptString(plainText, secret) {
   const dataB64 = enc.toString("base64");
   return {
     __enc: 1,
-    // Packed format: alg.iv.tag.ciphertext (all base64 except alg). Split on '.' on client.
-    data: `A256GCM.${ivB64}.${tagB64}.${dataB64}`,
+    // Packed format: iv.tag.ciphertext.alg (all base64 except alg). Split on '.' on client.
+    data: `${ivB64}.${tagB64}.${dataB64}.A256GCM`,
   };
 }
 
@@ -48,4 +48,3 @@ module.exports = function encryptJsonMiddleware(req, res, next) {
 
   next();
 };
-

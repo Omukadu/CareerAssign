@@ -20,14 +20,14 @@ function unpackEnvelope(body) {
   if (!body || typeof body !== "object") return null;
   if (!body.__enc) return null;
 
-  // New packed format: data = alg.iv.tag.ciphertext
+  // New packed format: data = iv.tag.ciphertext.alg
   if (typeof body.data === "string" && body.data.includes(".")) {
     const parts = body.data.split(".");
     if (parts.length >= 4) {
-      const alg = parts[0];
-      const iv = parts[1];
-      const tag = parts[2];
-      const data = parts.slice(3).join(".");
+      const alg = parts[parts.length - 1];
+      const iv = parts[0];
+      const tag = parts[1];
+      const data = parts.slice(2, -1).join(".");
       return { alg, iv, tag, data };
     }
     if (parts.length >= 3) {
@@ -41,7 +41,12 @@ function unpackEnvelope(body) {
 
   // Old shape: { alg, iv, tag, data }
   if (body.iv && body.tag && body.data) {
-    return { alg: body.alg || "A256GCM", iv: body.iv, tag: body.tag, data: body.data };
+    return {
+      alg: body.alg || "A256GCM",
+      iv: body.iv,
+      tag: body.tag,
+      data: body.data,
+    };
   }
 
   return null;
@@ -56,7 +61,10 @@ function decryptToObject(env, secret) {
 
   const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
   decipher.setAuthTag(tag);
-  const plain = Buffer.concat([decipher.update(data), decipher.final()]).toString("utf8");
+  const plain = Buffer.concat([
+    decipher.update(data),
+    decipher.final(),
+  ]).toString("utf8");
   return safeParseJson(plain);
 }
 
@@ -80,4 +88,3 @@ module.exports = function decryptJsonMiddleware(req, _res, next) {
 
   next();
 };
-
