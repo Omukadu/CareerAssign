@@ -1,21 +1,31 @@
 import { useEffect, useState } from "react";
 import api from "../api/client";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Edit2 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Categories() {
   const [cats, setCats] = useState([]);
   const [form, setForm] = useState({ name: "", icon: "", color: "#7c3aed" });
+  const [editId, setEditId] = useState(null);
   const load = () => api.get("/categories").then((r) => setCats(r.data));
   useEffect(() => {
     load();
   }, []);
   const create = async (e) => {
     e.preventDefault();
-    await api.post("/categories", form);
+    if (editId) {
+      await api.put(`/categories/${editId}`, form);
+      setEditId(null);
+    } else {
+      await api.post("/categories", form);
+    }
     setForm({ name: "", icon: "", color: "#7c3aed" });
     load();
+  };
+  const startEdit = (c) => {
+    setForm({ name: c.name, icon: c.icon, color: c.color });
+    setEditId(c._id);
   };
   const del = async (id) => {
     if (confirm("Delete?")) {
@@ -56,9 +66,29 @@ export default function Categories() {
           value={form.color}
           onChange={(e) => setForm({ ...form, color: e.target.value })}
         />
-        <button className="btn-primary">
-          <Plus size={16} className="mr-1" /> Add
-        </button>
+        <div className="flex gap-2">
+          <button type="submit" className="btn-primary flex-1">
+            {editId ? (
+              "Update"
+            ) : (
+              <>
+                <Plus size={16} className="mr-1" /> Add
+              </>
+            )}
+          </button>
+          {editId && (
+            <button
+              type="button"
+              onClick={() => {
+                setEditId(null);
+                setForm({ name: "", icon: "", color: "#7c3aed" });
+              }}
+              className="btn-outline"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {cats.map((c) => {
@@ -88,12 +118,21 @@ export default function Categories() {
                 </div>
               </Link>
 
-              <button
-                onClick={() => del(c._id)}
-                className="text-gray-400 hover:text-red-600"
-              >
-                <Trash2 size={16} />
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => startEdit(c)}
+                  className="text-gray-400 hover:text-blue-600"
+                >
+                  <Edit2 size={16} />
+                </button>
+                <button
+                  onClick={() => del(c._id)}
+                  className="text-gray-400 hover:text-red-600"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
           );
         })}

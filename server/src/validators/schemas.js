@@ -1,4 +1,4 @@
-const { z } = require('zod');
+const { z } = require("zod");
 
 exports.registerSchema = z.object({
   name: z.string().min(2).max(60),
@@ -17,7 +17,7 @@ exports.careerSchema = z.object({
   category: z.string().min(1),
   skills: z.array(z.string()).optional(),
   avgSalary: z.number().nonnegative().optional(),
-  demand: z.enum(['Low', 'Medium', 'High']).optional(),
+  demand: z.enum(["Low", "Medium", "High"]).optional(),
   image: z.string().optional(),
 });
 
@@ -35,5 +35,10 @@ exports.skillSchema = z.object({
 
 exports.progressSchema = z.object({
   percent: z.number().min(0).max(100),
+  label: z.string().optional(),
+});
+
+exports.progressUpdateSchema = z.object({
+  percent: z.number().min(0).max(100).optional(),
   label: z.string().optional(),
 });

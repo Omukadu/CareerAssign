@@ -186,7 +186,9 @@ export default function Layout() {
                     placeholder="Search careers"
                     onKeyDown={(e) => {
                       if (e.key === "Enter")
-                        nav2(`/careers?q=${encodeURIComponent(e.target.value)}`);
+                        nav2(
+                          `/careers?q=${encodeURIComponent(e.target.value)}`,
+                        );
                     }}
                   />
                 </div>
@@ -199,13 +201,13 @@ export default function Layout() {
               >
                 <Bell size={20} />
               </button> */}
-              <button
+              {/* <button
                 onClick={() => nav2("/saved")}
                 className="p-2 text-gray-500 hover:text-gray-800"
                 title="Saved Careers"
               >
                 <Bookmark size={20} />
-              </button>
+              </button> */}
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-brand-200 text-brand-800 font-semibold flex items-center justify-center">
                   {user?.name?.[0]?.toUpperCase()}
