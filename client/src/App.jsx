@@ -11,15 +11,11 @@ import Skills from "./pages/Skills.jsx";
 import Saved from "./pages/Saved.jsx";
 import Progress from "./pages/Progress.jsx";
 import Categories from "./pages/Categories.jsx";
+import Loader from "./components/Loader.jsx";
 
 function Private({ children }) {
   const { user, loading } = useAuth();
-  if (loading)
-    return (
-      <div className="loader-container">
-        <div className="dots"></div>
-      </div>
-    );
+  if (loading) return <Loader fullscreen label={null} />;
   return user ? children : <Navigate to="/login" replace />;
 }
 

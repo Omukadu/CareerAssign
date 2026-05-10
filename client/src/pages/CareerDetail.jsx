@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { Heart, Pencil, Trash2, ArrowLeft } from 'lucide-react';
+import Loader from '../components/Loader.jsx';
 
 export default function CareerDetail() {
   const { id } = useParams();
@@ -27,7 +28,7 @@ export default function CareerDetail() {
   };
 
   if (err) return <div className="text-red-600">{err}</div>;
-  if (!c) return <div className="text-gray-500">Loading…</div>;
+  if (!c) return <Loader label="Loading career details" />;
 
   return (
     <div className="max-w-4xl">

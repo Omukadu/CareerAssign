@@ -60,6 +60,7 @@ body {
 .dots {
     width: 72px;
     height: 40.3px;
+    position: relative;
     background: radial-gradient(farthest-side, #5b21b6 90%, #0000) 50% 0,
         radial-gradient(farthest-side, #5b21b6 90%, #0000) 100% 0;
     background-size: 17.3px 17.3px;
