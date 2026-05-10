@@ -184,7 +184,7 @@ export default function Layout() {
                   className="input pl-10"
                   placeholder="Search careers, skills, categories..."
                   onKeyDown={(e) => {
-                    if (e.key === "Enter")
+                    if (e.key === "Enter" && e.target.value.trim() !== "")
                       nav2(`/search?q=${encodeURIComponent(e.target.value)}`);
                   }}
                 />
